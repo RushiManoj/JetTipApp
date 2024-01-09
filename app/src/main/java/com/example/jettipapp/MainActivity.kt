@@ -56,6 +56,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+var currencySign = "$"
+
 @Composable
 fun MyApp(content: @Composable ()->Unit){
     JetTipAppTheme(darkTheme = false) {
@@ -85,7 +87,7 @@ fun TopHeader(totalPerPerson: Double = 134.0){
             Text(text = "Total Per Person",
                 style = MaterialTheme.typography.headlineSmall
             )
-            Text(text = "$$total",
+            Text(text = "$currencySign$total",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -93,12 +95,27 @@ fun TopHeader(totalPerPerson: Double = 134.0){
     }
 }
 
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Preview
 @Composable
 fun MainContent(){
+
+    val numberOfPeople = remember {
+        mutableStateOf(1)
+    }
+    val range = IntRange(start = 1, endInclusive = 100)
+    val tipAmountState = remember {
+        mutableStateOf(0.0)
+    }
+    val totalPerPersonState = remember {
+        mutableStateOf(0.0)
+    }
     Column {
-        BillForm(){billAmt ->
+        BillForm(numberOfPeople = numberOfPeople,
+            tipAmountState = tipAmountState,
+            totalPerPersonState = totalPerPersonState,
+            range = range){billAmt ->
             Log.d("Amt", "MainContent $billAmt")
         }
     }
@@ -107,6 +124,10 @@ fun MainContent(){
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun BillForm(modifier: Modifier = Modifier,
+             range: IntRange = 1..100,
+             numberOfPeople: MutableState<Int>,
+             tipAmountState: MutableState<Double>,
+             totalPerPersonState: MutableState<Double>,
                 onValChange: (String)-> Unit = {}){
     val totalBillState = remember {
         mutableStateOf("")
@@ -114,20 +135,12 @@ fun BillForm(modifier: Modifier = Modifier,
     val validState = remember(totalBillState.value) {
         totalBillState.value.trim().isNotEmpty()
     }
-    val numberOfPeople = remember {
-        mutableStateOf(1)
-    }
     val sliderPositionState = remember {
         mutableStateOf(0f)
     }
     val tipPercentage = (sliderPositionState.value*100).toInt()
 
-    val tipAmountState = remember {
-        mutableStateOf(0.0)
-    }
-    val totalPerPersonState = remember {
-        mutableStateOf(0.0)
-    }
+
 
     Log.d("Tipp","tip percent: $tipPercentage & tipState: ${tipAmountState.value}")
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -215,7 +228,7 @@ fun BillForm(modifier: Modifier = Modifier,
                     )
                     Spacer(modifier = Modifier.width(200.dp))
                     Text(
-                        text = "$ ${tipAmountState.value}",
+                        text = "$currencySign ${tipAmountState.value}",
                         modifier = Modifier.align(Alignment.CenterVertically)
                     )
                 }
@@ -247,11 +260,8 @@ fun BillForm(modifier: Modifier = Modifier,
 //            }
 
         }
-
-
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

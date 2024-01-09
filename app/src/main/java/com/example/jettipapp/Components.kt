@@ -5,6 +5,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AttachMoney
+import androidx.compose.material.icons.rounded.CurrencyRupee
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,7 +36,7 @@ fun InputField(
     OutlinedTextField(value = valueState.value,
         onValueChange = {valueState.value = it},
         label = { Text(text = labelId)},
-        leadingIcon = { Icon(imageVector = Icons.Rounded.AttachMoney,
+        leadingIcon = { Icon(imageVector = Icons.Rounded.CurrencyRupee,
             contentDescription = "Money Icon")},
         singleLine = isSingleLine,
         textStyle = androidx.compose.ui.text.TextStyle(
